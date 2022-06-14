@@ -91,9 +91,12 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
-
-    # TODO
-    raise NotImplementedError
+    if source == target :
+        path = []
+        print("Same person")
+        return path;
+    else :
+        return none
 
 
 def person_id_for_name(name):
