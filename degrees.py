@@ -56,7 +56,7 @@ def main():
     if len(sys.argv) > 2:
         sys.exit("Usage: python degrees.py [directory]")
     directory = sys.argv[1] if len(sys.argv) == 2 else "large"
-
+ 
     # Load data from files into memory
     print("Loading data...")
     load_data(directory)
@@ -91,14 +91,46 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+
+    #if same actor, return path of length 0
     if source == target :
-        path = []
-        print("Same person")
-        return path;
-    else :
-        return none
+        return []
+    
+    answer_found = False
+    traversed = set()
+    source = Node(state=source, parent=None, action=None)
+    queue_frontier = QueueFrontier()
+    queue_frontier.add(source)
+    
+    while answer_found == False:
 
+        #no path found between the two actors
+        if queue_frontier.empty() == True:
+            return None
 
+        #pop node from queue and mark node as traversed
+        node = queue_frontier.remove()
+        traversed.add(node.state)
+        
+        answer = []
+
+        # run BFS on node
+        for movie_id, person_id in neighbors_for_person(node.state):
+            if not queue_frontier.contains_state(person_id) and person_id not in traversed:
+                child = Node(state = person_id, parent = node, action = movie_id)
+
+                if child.state == target:
+                    answer.append((movie_id,person_id))
+
+                    while node.parent is not None:
+                        answer.append((node.action, node.state))
+                        node = node.parent
+
+                    # reverse order of path for correct order when outputting solution
+                    answer.reverse()
+                    return answer
+                queue_frontier.add(child)
+                
 def person_id_for_name(name):
     """
     Returns the IMDB id for a person's name,
